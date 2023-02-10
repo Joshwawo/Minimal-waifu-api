@@ -1,0 +1,6 @@
+*.png
+img-base64/*
+otras/
+flask-images
+images
+.env
