@@ -21,7 +21,7 @@ CORS(app)
 
 def generate_name():
     uuid_string = str(uuid.uuid4())
-    return uuid_string.replace('-', '')+ '.png'
+    return uuid_string.replace('-', '')+ '.webp'
 
 
 @app.route("/prompt", methods=['POST'])
@@ -40,13 +40,14 @@ def image_base64():
         data = request.get_json()
         with autocast("cuda"):
             image = pipe(data["prompt"], guidance_scale=6)
-            filename = f"img-base64/{generate_name()}"
+            prompt = data["prompt"]
+            filename = f"images/test/{generate_name()}"
             image.images[0].save(filename)
         
         with open(filename, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
             
-        return jsonify({"Message": "Complete", "image_data": encoded_string})
+        return jsonify({"Message": "Complete","prompt":prompt,  "image_data": encoded_string})
 
 @app.route('/img/<path:filename>', methods=['GET'])
 def serve_images(filename):
@@ -63,7 +64,8 @@ def get_images():
     return jsonify(images)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='localhost', port=5000)
+    # app.run(debug=True, host='localhost', port=5000)
+    app.run(debug=True, host='192.168.1.7', port=5000)
 
 # Path: requirements.txt
 # transformers==4.5.1
