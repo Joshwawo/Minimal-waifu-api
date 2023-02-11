@@ -3,16 +3,23 @@ import torch
 from torch import autocast
 from flask import Flask, request, jsonify,send_from_directory,url_for
 from flask_cors import CORS
-from diffusers import StableDiffusionPipeline
+from diffusers import StableDiffusionPipeline, StableDiffusionImageVariationPipeline
+from PIL import Image
 import uuid
 import base64
 
-
+# device = "cuda:0"
 pipe = StableDiffusionPipeline.from_pretrained(
     'hakurei/waifu-diffusion',
     torch_dtype=torch.float16,
 
 ).to('cuda')
+
+# sd_pipe = StableDiffusionImageVariationPipeline.from_pretrained(
+#   "lambdalabs/sd-image-variations-diffusers",
+#   revision="v2.0",
+# )
+# sd_pipe = sd_pipe.to(device)
 
 
 app = Flask(__name__)
@@ -39,7 +46,7 @@ def image_base64():
     if request.method == 'POST':
         data = request.get_json()
         with autocast("cuda"):
-            image = pipe(data["prompt"], guidance_scale=6)
+            image = pipe(data["prompt"], guidance_scale=7.7,negative_prompt=data["negative_prompt"],num_inference_steps=100,)
             prompt = data["prompt"]
             filename = f"images/test/{generate_name()}"
             image.images[0].save(filename)
