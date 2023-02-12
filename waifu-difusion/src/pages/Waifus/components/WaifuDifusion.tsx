@@ -12,6 +12,7 @@ const WaifuDifusion = () => {
   const [images, setImages] = useState<string[]>([]);
   const [singleUseImage, setSingleUseImage] = useState<string[]>([]);
   const [blockButton, setBlockButton] = useState(false);
+  const [steps, setSteps] = useState(60);
 
   useEffect(() => {
     const storedImages = localStorage.getItem("waifus");
@@ -31,7 +32,7 @@ const WaifuDifusion = () => {
         return toast.warn("Please enter a prompt", {theme:"dark"})
       }
     setBlockButton(true);
-     const data = await axios.post("http://192.168.1.7:5000/prompt/image", { prompt, negative_prompt:negativePrompt })
+     const data = await axios.post("http://192.168.1.7:5000/prompt/image", { prompt, negative_prompt:negativePrompt, steps })
      
       // const data = await toast.promise(axios.post("http://192.168.1.7:5000/prompt/image", { prompt }), {
       //   pending: "Processing...",
@@ -43,6 +44,7 @@ const WaifuDifusion = () => {
       //   position:"bottom-right"
 
       // });
+      console.log(data.data);
       setSingleUseImage([...singleUseImage, data.data.image_data])
       setImages([...images, data.data.image_data]);
       localStorage.setItem("waifus", JSON.stringify([...images,data.data.image_data]));
@@ -55,12 +57,19 @@ const WaifuDifusion = () => {
       setBlockButton(false);
     }
   };
+  const handleOnChange = (e: any) => {
+    setSteps(e.target.value);
+  }
 
+  const  replaceAll = (str: string): string => {
+    return str.replace(/ /g, ",").replace(/_/g, " ").replace(/,{2,}/g, ",");
+  }
+  
   
 
   return (
     <div className="container mx-auto h-screen">
-      <h1 className="text-5xl font-semibold mb-5">Waifu Difusion</h1>
+      <h1 className="text-5xl font-semibold mb-5">Waifu Difusion 1.0</h1>
       {
         prompt === "" ? (<p className="text-xl text-yellow-500">Please enter a prompt</p>) 
         : 
@@ -77,7 +86,7 @@ const WaifuDifusion = () => {
               rows={4}
               value={prompt}
               // onChange={(e) => setPrompt(e.target.value)}
-              onChange={(e) => setPrompt(e.target.value.replaceAll(" ", ",").replaceAll("_", " "))}
+              onChange={(e) => setPrompt(replaceAll(e.target.value))}
             />
             <label className="text-xl">
           Negative Prompt:
@@ -87,9 +96,14 @@ const WaifuDifusion = () => {
             name="prompt"
             rows={4}
             value={negativePrompt}
-            onChange={(e) => setNegativePrompt(e.target.value)}
+            onChange={(e) => setNegativePrompt(replaceAll(e.target.value))}
             // onChange={(e) => setPrompt(e.target.value.replaceAll(" ", ",").replaceAll("_", " "))}
           />
+        <div className="flex flex-col">
+          <span className="text-xl m">Steps:{steps}</span>
+          <input type="range" className="appearance-none  rounded mr-2 slider-thumb in-range:boder-green-500 out-of-range:border-red-500 w-full  py-2 px-2 mt-4" min={1} max={999} onChange={handleOnChange}  />
+        </div>
+        
         </div>
         <button type="submit" className={`my-2 w-full ${blockButton ? 'border-yellow-700 hover:border-yellow-600 text-[#ffffff67] text-center': 'border-green-700 hover:border-green-600'}`} disabled={blockButton}>
           {

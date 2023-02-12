@@ -3,6 +3,7 @@ import WaifuDifusion from './pages/Waifus/components/WaifuDifusion'
 import UserGenerations from './pages/userGenerations/Components/UserGenerations'
 import Navbar from '@/components/Navbar'
 import {ToastContainer} from 'react-toastify'
+import UserGenDB from './pages/userGenerations/Components/UserGenDB'
 
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<WaifuDifusion/>}/>
           <Route path='/my-generate' element={<UserGenerations/>} />
+          <Route path='/my-generate-db' element={<UserGenDB/>} />
         </Routes>
       </div>
     <ToastContainer />

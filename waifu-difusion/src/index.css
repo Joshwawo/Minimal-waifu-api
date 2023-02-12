@@ -22,8 +22,6 @@
   
 }
 
-
-
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -35,6 +33,15 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
+.slider-thumb::-webkit-slider-thumb:hover {
+  @apply bg-blue-700;
+}
+
+     
+
+
+
 /* button:hover {
   border-color: #f8dd41;
 } */

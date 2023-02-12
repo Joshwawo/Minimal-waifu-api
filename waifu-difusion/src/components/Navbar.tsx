@@ -11,7 +11,7 @@ const Navbar = () => {
           <div className="flex items-center justify-between py-3 md:py-5 md:block">
             <Link to={`/`}>
               <h2 className="text-2xl font-semibold ">
-                <span className="text-green-400">Waifu</span> Difusion
+                <span className="text-green-400">Waifu</span> Difusion 🌸
               </h2>
             </Link>
             <div className="md:hidden">
@@ -64,6 +64,12 @@ const Navbar = () => {
               </li>
               <li className=" hover:text-blue-600">
                 <Link to={`/my-generate`}>Latest prompts</Link>
+              </li>
+              <li className=" hover:text-blue-600">
+                <Link to={`/my-generate`}>img2img</Link>
+              </li>
+              <li className=" hover:text-blue-600">
+                <Link to={`/my-generate-db`}>db saved</Link>
               </li>
             </ul>
           </div>
